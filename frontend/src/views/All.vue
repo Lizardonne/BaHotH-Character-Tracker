@@ -10,7 +10,7 @@
     </tr>
     <tr v-for="player in players" v-bind:key="player._id">
       <td>{{ player.playerName }}</td>
-      <td>{{ player.characterId }}</td>
+      <td>{{ characterName(player) }}</td>
       <td>{{ player.created }}</td>
       <td><button type="button" v-on:click="deletePlayer(player)">X</button></td>
     </tr>
@@ -24,11 +24,13 @@ export default {
   name: 'All',
   data() {
     return {
-      players: []
+      players: [],
+      characters: []
     }
   },
   created() {
     this.getPlayers();
+    this.getCharacters();
   },
   methods: {
     async getPlayers() {
@@ -38,6 +40,19 @@ export default {
       } catch(error) {
         console.log(error);
       }
+    },
+    async getCharacters() {
+      try {
+        var response = await axios.get("/api/characters");
+        console.log(response);
+        this.characters = response.data;
+      } catch(error) {
+        console.log(error);
+      }
+    },
+    characterName(player) {
+      var character = this.characters.find(c => c._id === player.characterId);
+      return character.name;
     },
     async deletePlayer(player) {
       try {

@@ -38,10 +38,11 @@ export default {
       }
     },
     async createPlayer() {
+      var character = this.characters.find(c => c.name === this.selectedCharacter);
       try {
         await axios.post("/api/players", {
           playerName: this.playerName,
-          characterId: "fixme"
+          characterId: character._id
         });
       } catch(error) {
         console.log(error);
