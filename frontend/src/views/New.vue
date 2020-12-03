@@ -24,7 +24,19 @@ export default {
       characters: []
     }
   },
+  created() {
+    this.getCharacters();
+  },
   methods: {
+    async getCharacters() {
+      try {
+        var response = await axios.get("/api/characters");
+        console.log(response);
+        this.characters = response.data;
+      } catch(error) {
+        console.log(error);
+      }
+    },
     async createPlayer() {
       try {
         await axios.post("/api/players", {
