@@ -3,10 +3,10 @@ import VueRouter from 'vue-router'
 import New from '../views/New.vue'
 import All from '../views/All.vue'
 import Player from '../views/Player.vue'
+
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/',
     name: 'New',
     component: New
