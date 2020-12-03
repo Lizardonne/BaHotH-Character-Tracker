@@ -6,12 +6,14 @@
       <th>Player</th>
       <th>Character</th>
       <th>Created</th>
+      <th>Last Used</th>
       <th>Delete</th>
     </tr>
     <tr v-for="player in players" v-bind:key="player._id">
       <td>{{ player.playerName }}</td>
       <td>{{ characterName(player) }}</td>
       <td>{{ player.created }}</td>
+      <td>{{ player.updated }}</td>
       <td><button type="button" v-on:click="deletePlayer(player)">X</button></td>
     </tr>
   </table>

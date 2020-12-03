@@ -14,6 +14,7 @@ const playerScheme = new mongoose.Schema({
   playerName: String,
   characterId: String,
   created: Date,
+  updated: Date,
   hp: [Number]
 });
 const characterScheme = new mongoose.Schema({
@@ -46,11 +47,16 @@ mongoose.connect("mongodb://localhost:27017/bahoth", {
 
 
 // CREATE
+  /* Request body:
+    playerName: String    Name of player document to be created
+    characterId: String   ID string of character document associated with player
+    */
 app.post("/api/players", async (req, res) => {
   const player = new Player({
     playerName: req.body.playerName,
     characterId: req.body.characterId,
     created: Date.now(),
+    updated: Date.now(),
     hp: [0, 0, 0, 0] // TODO: use character start values
   });
   try {
@@ -93,6 +99,7 @@ async function refreshCharacters() {
 refreshCharacters();
 
 // READ
+  // Request body: NONE
 app.get("/api/players", async (req, res) => {
   try {
     var players = await Player.find();
@@ -102,6 +109,9 @@ app.get("/api/players", async (req, res) => {
     res.sendStatus(500);
   }
 });
+  /* Request body:
+    id: String    String ID of player document to be found
+    */
 app.get("/api/players/:player", async (req, res) => {
   try {
     var player = await Player.findOne({
@@ -113,6 +123,7 @@ app.get("/api/players/:player", async (req, res) => {
     res.sendStatus(500);
   }
 });
+  // Request body: NONE
 app.get("/api/characters", async (req, res) => {
   try {
     var characters = await Character.find();
@@ -122,6 +133,9 @@ app.get("/api/characters", async (req, res) => {
     res.sendStatus(500);
   }
 });
+  /* Request body:
+    id: String    String ID of character document to be found
+    */
 app.get("/api/characters/:character", async (req, res) => {
   try {
     var character = await Character.findOne({
@@ -135,8 +149,37 @@ app.get("/api/characters/:character", async (req, res) => {
 });
 
 // UPDATE (gameplay)
+  /* Request body:
+    id: String        ID string of player document to update
+    speed: Number     New speed HP index
+    might: Number     New might HP index
+    sanity: Number    New sanity HP index
+    knowledge: Number New knowledge HP index
+    */
+app.put("/api/players:player", async (req, res) => {
+  try {
+    var player = await Player.findOne({
+      _id: req.body.id
+    });
+    player.updated = Date.now();
+    player.hp: [
+      req.body.speed,
+      req.body.might,
+      req.body.sanity,
+      req.body.knowledge
+    ];
+    await player.save();
+    res.send(player);
+  } catch(error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
 
 // DELETE
+  /* Request body:
+    id: String    String ID of player document to be deleted
+    */
 app.delete("/api/players/:player", async (req, res) => {
   try {
     const response = await Player.deleteOne({
