@@ -1,54 +1,75 @@
 <template>
 <div id="app">
   <div id="nav">
-    <router-link to="/">New</router-link>
-    <router-link to="/all">All</router-link>
+    <a href="/">Betrayal at House on the Hill<br />Character Tracker</a>
+    <div>
+      <router-link to="/">New</router-link>
+      <router-link to="/all">All</router-link>
+    </div>
   </div>
-  <router-view />
-  <div class="footer">
-    <a href="https://github.com/Lizardonne/BaHotH-Character-Tracker">GitHub</a>
+  <div class="router-view">
+    <router-view />
   </div>
 </div>
 </template>
 
 <style>
-body {
+html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
-}
-
-#app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
+  box-sizing: border-box;
   background-color: #26142a;
   font-family: 'Cinzel', 'Texturina', serif;
   text-align: center;
   color: yellow;
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#app {
+  flex: 1 0 auto;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 #nav {
-  padding: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: black;
+}
+
+#nav div a {
+  font-size: 1.5em;
 }
 
 a {
   padding: 0.5em;
   background-color: black;
-  font-weight: bold;
   text-decoration: none;
   color: yellow;
 }
 
 a:hover {
-  background-color: indigo;
+  background-color: darkred;
 }
 
 a.router-link-exact-active {
-  color: orange;
+  color: darkred;
+}
+a.router-link-exact-active:hover {
+  color: red;
 }
 
 .footer {
-  margin-top: 10%;
+  flex-shrink: 0;
+
   background-color: black;
   display: flex;
   flex-direction: row;

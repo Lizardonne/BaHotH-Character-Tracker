@@ -140,6 +140,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 2.5%;
 }
 
 .flavortext {
@@ -159,14 +160,14 @@ th {
 }
 
 .stats {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
+  margin-top: 1em;
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-auto-flow: column;
+  grid-gap: 1em;
 }
 
 .stat {
-  margin: 1em;
   border: 5px solid black;
 }
 
@@ -210,7 +211,7 @@ th {
 }
 
 p {
-  margin: 5%;
+  margin: 5% 15%;
   font-family: 'Texturina', 'Cinzel', serif;
   text-align: left;
 }

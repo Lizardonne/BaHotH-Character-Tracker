@@ -3,11 +3,11 @@
   <h1>Active Players</h1>
   <table>
     <tr class="table-header">
-      <th>Player</th>
+      <th class="hint">Player</th>
       <th>Character</th>
       <th>Created</th>
       <th>Last Used</th>
-      <th>Delete</th>
+      <th class="hint">Delete</th>
     </tr>
     <tr v-for="player in players" v-bind:key="player._id">
       <td class="actionable" v-on:click="gotoPlayer(player)">{{ player.playerName }}</td>
@@ -92,15 +92,31 @@ export default {
 }
 
 table {
+  border-spacing: 0 0.5em;
+  /*
   border-collapse: collapse;
+  */
+  table-layout: fixed;
+}
+
+tr:not(.table-header) {
+  background-color: black;
 }
 
 tr:not(.table-header):hover {
   background-color: gray;
 }
 
-td {
+th, td {
   padding: 0 0.5em;
+}
+
+.table-header {
+  border: 3px solid black;
+}
+
+.hint {
+  background-color: black;
 }
 
 .actionable:hover {
