@@ -1,32 +1,32 @@
 <template>
-  <div class="player">
-    <div class="player-header">
-      <h1>{{ character.name }}</h1>
-      <h2>{{ player.playerName }}</h2>
-    </div>
+<div class="player">
+  <div class="player-header">
+    <h1>{{ character.name }}</h1>
+    <h2>{{ player.playerName }}</h2>
+  </div>
 
-    <div class="flavortext">
+  <div class="flavortext">
+    <ul>
+      <li>Age: {{ character.age }}</li>
+      <li>Height: {{ character.height }}</li>
+      <li>Weight: {{ character.weight }}</li>
+      <li>Hobbies: {{ listToString(character.hobbies) }}</li>
+      <li>Birthday: {{ character.birthday }}</li>
+    </ul>
+    <p>{{ character.flavortext }}</p>
+  </div>
+
+  <div class="stats">
+    <div v-for="(stat, i) in character.stats" v-bind:key="i">
+      <h3>{{ statName(i) }}</h3>
+      <button type="button" v-on:click="decrementStat(i)">-</button>
       <ul>
-        <li>Age: {{ character.age }}</li>
-        <li>Height: {{ character.height }}</li>
-        <li>Weight: {{ character.weight }}</li>
-        <li>Hobbies: {{ listToString(character.hobbies) }}</li>
-        <li>Birthday: {{ character.birthday }}</li>
+        <li v-bind:class="{active: activeHP(j)}" class="stat-point" v-for="(point, j) in stat" v-bind:key="j">{{ point }}</li>
       </ul>
-      <p>{{ character.flavortext }}</p>
-    </div>
-
-    <div class="stats">
-      <div v-for="(stat, i) in character.stats" v-bind:key="i">
-        <h3>{{ statName(i) }}</h3>
-        <button type="button" v-on:click="decrementStat(i)">-</button>
-        <ul>
-          <li class="stat-point" v-for="(point, j) in stat" v-bind:key="j">{{ point }}</li>
-        </ul>
-        <button type="button" v-on:click="incrementStat(i)">+</button>
-      </div>
+      <button type="button" v-on:click="incrementStat(i)">+</button>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -52,7 +52,7 @@ export default {
         this.player = playerResponse.data;
         var characterResponse = await axios.get("/api/characters/" + this.player.characterId);
         this.character = characterResponse.data;
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
     },
@@ -63,16 +63,16 @@ export default {
         });
         var response = await axios.get("/api/players/" + this.playerId);
         this.player = response.data;
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
     },
     listToString(array) {
       var output = "";
-      if(array != null) {
+      if (array != null) {
         for (var i = 0; i < array.length; i++) {
           output += array[i];
-          if(i < array.length - 1) {
+          if (i < array.length - 1) {
             output += ", ";
           }
         }
@@ -88,20 +88,26 @@ export default {
       ];
       return statNames[index];
     },
+    activeHP(index) {
+      if(index == this.player.hp[index]) {
+        return true;
+      }
+      return false;
+    },
     incrementStat(index) {
-      console.log(this.player.hp[index]);
       this.player.hp[index]++;
-      console.log(this.player.hp[index]);
       this.updatePlayer();
-      console.log(this.player.hp[index]);
     },
     decrementStat(index) {
-      console.log(this.player.hp[index]);
       this.player.hp[index]--;
-      console.log(this.player.hp[index]);
       this.updatePlayer();
-      console.log(this.player.hp[index]);
     }
   }
 }
 </script>
+
+<style scoped>
+.active {
+  background-color: gray;
+}
+</style>
