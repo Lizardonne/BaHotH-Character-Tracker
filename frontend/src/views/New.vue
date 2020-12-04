@@ -4,11 +4,11 @@
   <div class="player-info">
     <input type="text" v-model="playerName" placeholder="Player Name">
     <select class="characters" v-model="selectedCharacter">
-      <option disabled>Character Name</option>
+      <option disabled selected value="">Character Name</option>
       <option v-for="character in characters" v-bind:key="character._id">{{ character.name }}</option>
     </select>
     <!-- TODO: option to randomize character select -->
-    <button type="button" v-on:click="createPlayer">Let the Haunt begin...</button>
+    <button v-bind:disabled="!isReady" type="button" v-on:click="createPlayer">Let the Haunt begin...</button>
   </div>
 </div>
 </template>
@@ -20,12 +20,17 @@ export default {
   data() {
     return {
       playerName: "",
-      selectedCharacter: null,
+      selectedCharacter: "",
       characters: []
     }
   },
   created() {
     this.getCharacters();
+  },
+  computed: {
+    isReady() {
+      return this.playerName != "" && this.selectedCharacter != "";
+    }
   },
   methods: {
     async getCharacters() {
@@ -37,11 +42,12 @@ export default {
       }
     },
     async createPlayer() {
-      var character = this.characters.find(c => c.name === this.selectedCharacter);
+      var character = this.characters.find(c => c.name == this.selectedCharacter);
       try {
         var response = await axios.post("/api/players", {
           playerName: this.playerName,
-          characterId: character._id
+          characterId: character._id,
+          startStats: character.statStarts
         });
         this.$router.push({
           path: "/player/" + response.data._id

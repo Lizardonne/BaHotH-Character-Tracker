@@ -26,14 +26,13 @@ const characterScheme = new mongoose.Schema({
   birthday: String,
   flavortext: String,
   color: String,
-  speed: [Number],
-  speedStart: Number,
-  might: [Number],
-  mightStart: Number,
-  sanity: [Number],
-  sanityStart: Number,
-  knowledge: [Number],
-  knowledgeStart: Number
+  stats: [
+    [Number],
+    [Number],
+    [Number],
+    [Number]
+  ],
+  statStarts: [Number]
 });
 
 const Player = mongoose.model("Player", playerScheme);
@@ -50,6 +49,7 @@ mongoose.connect("mongodb://localhost:27017/bahoth", {
   /* Request body:
     playerName: String    Name of player document to be created
     characterId: String   ID string of character document associated with player
+    startStats: [Number]  Starting indexes for all stats
     */
 app.post("/api/players", async (req, res) => {
   const player = new Player({
@@ -57,7 +57,7 @@ app.post("/api/players", async (req, res) => {
     characterId: req.body.characterId,
     created: Date.now(),
     updated: Date.now(),
-    hp: [0, 0, 0, 0] // TODO: use character start values
+    hp: req.body.startStats
   });
   try {
     await player.save();
@@ -81,14 +81,8 @@ async function refreshCharacters() {
         birthday: character.birthday,
         flavortext: character.flavortext,
         color: character.color,
-        speed: character.speed,
-        speedStart: character.speedStart,
-        might: character.might,
-        mightStart: character.mightStart,
-        sanity: character.sanity,
-        sanityStart: character.sanityStart,
-        knowledge: character.knowledge,
-        knowledgeStart: character.knowledgeStart
+        stats: character.stats,
+        statStarts: character.statStarts
       });
       await c.save();
     });
