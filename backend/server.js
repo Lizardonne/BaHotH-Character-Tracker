@@ -136,21 +136,13 @@ app.get("/api/characters/:character", async (req, res) => {
 
 // UPDATE (gameplay)
   /* Request body:
-    speed: Number     New speed HP index
-    might: Number     New might HP index
-    sanity: Number    New sanity HP index
-    knowledge: Number New knowledge HP index
+    hp: [Number]    New HP indexes
     */
 app.put("/api/players/:player", async (req, res) => {
   try {
     var player = await Player.findById(req.params.id).exec();
     player.updated = Date.now();
-    player.hp = [
-      req.body.speed,
-      req.body.might,
-      req.body.sanity,
-      req.body.knowledge
-    ];
+    player.hp = req.body.hp;
     await player.save();
     res.send(player);
   } catch(error) {

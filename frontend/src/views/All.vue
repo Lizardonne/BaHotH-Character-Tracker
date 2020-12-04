@@ -12,8 +12,8 @@
     <tr v-for="player in players" v-bind:key="player._id">
       <td v-on:click="gotoPlayer(player)">{{ player.playerName }}</td>
       <td>{{ characterName(player) }}</td>
-      <td>{{ player.created }}</td>
-      <td>{{ player.updated }}</td>
+      <td>{{ dateToString(player.created) }}</td>
+      <td>{{ dateToString(player.updated) }}</td>
       <td><button type="button" v-on:click="deletePlayer(player)">X</button></td>
     </tr>
   </table>
@@ -53,12 +53,17 @@ export default {
     },
     characterName(player) {
       var character = this.characters.find(c => {
-        c;
-        //console.log(c._id, player.characterId, c._id === player.characterId);
-        //return c._id === player.characterId;
-        return player.characterId;
+        return c._id == player.characterId;
       });
+      if(character == null) { return ""; }
       return character.name;
+    },
+    dateToString(date) {
+      if(typeof date == typeof "") {
+        var temp = new Date(date);
+        return temp.toLocaleDateString() + " @ " + temp.toLocaleTimeString()
+      }
+      return date.toString();
     },
     async deletePlayer(player) {
       try {

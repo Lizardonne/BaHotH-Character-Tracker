@@ -17,13 +17,13 @@
     </div>
 
     <div class="stats">
-      <div v-for="stat in character.stats" v-bind:key="indexOf(stat, character.stats)">
-        <h3>{{ statName(indexOf(stat, character.stats)) }}</h3>
-        <button type="button">-</button>
+      <div v-for="(stat, i) in character.stats" v-bind:key="i">
+        <h3>{{ statName(i) }}</h3>
+        <button type="button" v-on:click="decrementStat(i)">-</button>
         <ul>
-          <li class="stat-point" v-for="point in stat" v-bind:key="indexOf(point, stat)">{{ point }}</li>
+          <li class="stat-point" v-for="(point, j) in stat" v-bind:key="j">{{ point }}</li>
         </ul>
-        <button type="button">+</button>
+        <button type="button" v-on:click="incrementStat(i)">+</button>
       </div>
     </div>
   </div>
@@ -56,6 +56,17 @@ export default {
         console.log(error);
       }
     },
+    async updatePlayer() {
+      try {
+        await axios.put("/api/players/" + this.playerId, {
+          hp: this.player.hp
+        });
+        var response = await axios.get("/api/players/" + this.playerId);
+        this.player = response.data;
+      } catch(error) {
+        console.log(error);
+      }
+    },
     listToString(array) {
       var output = "";
       if(array != null) {
@@ -77,8 +88,19 @@ export default {
       ];
       return statNames[index];
     },
-    indexOf(item, array) {
-      return array.indexOf(item);
+    incrementStat(index) {
+      console.log(this.player.hp[index]);
+      this.player.hp[index]++;
+      console.log(this.player.hp[index]);
+      this.updatePlayer();
+      console.log(this.player.hp[index]);
+    },
+    decrementStat(index) {
+      console.log(this.player.hp[index]);
+      this.player.hp[index]--;
+      console.log(this.player.hp[index]);
+      this.updatePlayer();
+      console.log(this.player.hp[index]);
     }
   }
 }
