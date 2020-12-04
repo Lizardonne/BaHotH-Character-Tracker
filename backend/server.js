@@ -70,7 +70,7 @@ app.post("/api/players", async (req, res) => {
 const characterSheet = require("./characters.json");
 async function refreshCharacters() {
   try {
-    await Character.deleteMany({});
+    await Character.deleteMany({}).exec();
     characterSheet.forEach(async character => {
       const c = new Character({
         name: character.name,
@@ -96,27 +96,23 @@ async function refreshCharacters() {
     console.log(error);
   }
 }
-refreshCharacters();
+//refreshCharacters();  //breaks persistence by changing ID values
 
 // READ
   // Request body: NONE
 app.get("/api/players", async (req, res) => {
   try {
-    var players = await Player.find();
+    var players = await Player.find().exec();
     res.send(players);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
   }
 });
-  /* Request body:
-    id: String    String ID of player document to be found
-    */
+  // Request body: NONE
 app.get("/api/players/:player", async (req, res) => {
   try {
-    var player = await Player.findOne({
-      _id: req.body.id
-    });
+    var player = await Player.findById(req.params.player).exec();
     res.send(player);
   } catch (error) {
     console.log(error);
@@ -126,21 +122,17 @@ app.get("/api/players/:player", async (req, res) => {
   // Request body: NONE
 app.get("/api/characters", async (req, res) => {
   try {
-    var characters = await Character.find();
+    var characters = await Character.find().exec();
     res.send(characters);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
   }
 });
-  /* Request body:
-    id: String    String ID of character document to be found
-    */
+  // Request body: NONE
 app.get("/api/characters/:character", async (req, res) => {
   try {
-    var character = await Character.findOne({
-      _id: req.body.id
-    });
+    var character = await Character.findById(req.params.character).exec();
     res.send(character);
   } catch (error) {
     console.log(error);
@@ -150,19 +142,16 @@ app.get("/api/characters/:character", async (req, res) => {
 
 // UPDATE (gameplay)
   /* Request body:
-    id: String        ID string of player document to update
     speed: Number     New speed HP index
     might: Number     New might HP index
     sanity: Number    New sanity HP index
     knowledge: Number New knowledge HP index
     */
-app.put("/api/players:player", async (req, res) => {
+app.put("/api/players/:player", async (req, res) => {
   try {
-    var player = await Player.findOne({
-      _id: req.body.id
-    });
+    var player = await Player.findById(req.params.id).exec();
     player.updated = Date.now();
-    player.hp: [
+    player.hp = [
       req.body.speed,
       req.body.might,
       req.body.sanity,
@@ -177,14 +166,10 @@ app.put("/api/players:player", async (req, res) => {
 });
 
 // DELETE
-  /* Request body:
-    id: String    String ID of player document to be deleted
-    */
+  // Request body: NONE
 app.delete("/api/players/:player", async (req, res) => {
   try {
-    const response = await Player.deleteOne({
-      _id: req.body.id
-    });
+    const response = await Player.findByIdAndDelete(req.params.player).exec();
     res.send(response);
   } catch (error) {
     console.log(error);

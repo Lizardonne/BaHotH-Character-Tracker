@@ -2,7 +2,6 @@
 <div id="app">
   <div id="nav">
     <router-link to="/">New</router-link> |
-    <router-link to="/player">Player</router-link> |
     <router-link to="/all">All</router-link>
   </div>
   <router-view />

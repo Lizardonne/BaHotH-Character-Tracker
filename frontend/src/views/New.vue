@@ -31,7 +31,6 @@ export default {
     async getCharacters() {
       try {
         var response = await axios.get("/api/characters");
-        console.log(response);
         this.characters = response.data;
       } catch(error) {
         console.log(error);
@@ -40,9 +39,12 @@ export default {
     async createPlayer() {
       var character = this.characters.find(c => c.name === this.selectedCharacter);
       try {
-        await axios.post("/api/players", {
+        var response = await axios.post("/api/players", {
           playerName: this.playerName,
           characterId: character._id
+        });
+        this.$router.push({
+          path: "/player/" + response.data._id
         });
       } catch(error) {
         console.log(error);

@@ -10,7 +10,7 @@
       <th>Delete</th>
     </tr>
     <tr v-for="player in players" v-bind:key="player._id">
-      <td>{{ player.playerName }}</td>
+      <td v-on:click="gotoPlayer(player)">{{ player.playerName }}</td>
       <td>{{ characterName(player) }}</td>
       <td>{{ player.created }}</td>
       <td>{{ player.updated }}</td>
@@ -39,34 +39,39 @@ export default {
       try {
         var response = await axios.get("/api/players");
         this.players = response.data;
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
     },
     async getCharacters() {
       try {
         var response = await axios.get("/api/characters");
-        console.log(response);
         this.characters = response.data;
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
     },
     characterName(player) {
-      var character = this.characters.find(c => c._id === player.characterId);
+      var character = this.characters.find(c => {
+        c;
+        //console.log(c._id, player.characterId, c._id === player.characterId);
+        //return c._id === player.characterId;
+        return player.characterId;
+      });
       return character.name;
     },
     async deletePlayer(player) {
       try {
-        await axios.delete("/api/players/" + player._id, {
-          data: {
-            id: player._id
-          }
-        });
+        await axios.delete("/api/players/" + player._id);
         this.getPlayers();
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
+    },
+    gotoPlayer(player) {
+      this.$router.push({
+        path: "/player/" + player._id
+      });
     }
   }
 }
