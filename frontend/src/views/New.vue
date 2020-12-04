@@ -37,7 +37,7 @@ export default {
       try {
         var response = await axios.get("/api/characters");
         this.characters = response.data;
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
     },
@@ -52,7 +52,7 @@ export default {
         this.$router.push({
           path: "/player/" + response.data._id
         });
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
     },
@@ -61,8 +61,33 @@ export default {
 </script>
 
 <style scoped>
-  .player-info {
-    display: flex;
-    flex-direction: column;
-  }
+.new {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+input, select, button {
+  margin: 1em 0;
+  background-color: gray;
+  color: black;
+  border: none;
+  font-family: 'Texturina', 'Cinzel', serif;
+  font-size: 1.5em;
+}
+
+::placeholder, option:disabled {
+  color: lightgray;
+}
+
+button:disabled {
+  background-color: #26142a;
+  color: #26142a;
+}
 </style>

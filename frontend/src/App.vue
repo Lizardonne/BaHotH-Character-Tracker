@@ -1,32 +1,57 @@
 <template>
 <div id="app">
   <div id="nav">
-    <router-link to="/">New</router-link> |
+    <router-link to="/">New</router-link>
     <router-link to="/all">All</router-link>
   </div>
   <router-view />
+  <div class="footer">
+    <a href="https://github.com/Lizardonne/BaHotH-Character-Tracker">GitHub</a>
+  </div>
 </div>
 </template>
 
 <style>
+body {
+  margin: 0;
+  padding: 0;
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  background-color: #26142a;
+  font-family: 'Cinzel', 'Texturina', serif;
   text-align: center;
-  color: #2c3e50;
+  color: yellow;
 }
 
 #nav {
   padding: 30px;
 }
 
-#nav a {
+a {
+  padding: 0.5em;
+  background-color: black;
   font-weight: bold;
-  color: #2c3e50;
+  text-decoration: none;
+  color: yellow;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+a:hover {
+  background-color: indigo;
+}
+
+a.router-link-exact-active {
+  color: orange;
+}
+
+.footer {
+  margin-top: 10%;
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 </style>

@@ -6,14 +6,28 @@
   </div>
 
   <div class="flavortext">
-    <ul>
-      <li>Age: {{ character.age }}</li>
-      <li>Height: {{ character.height }}</li>
-      <li>Weight: {{ character.weight }}</li>
-      <li>Hobbies: {{ listToString(character.hobbies) }}</li>
-      <li>Birthday: {{ character.birthday }}</li>
-    </ul>
-    <p>{{ character.flavortext }}</p>
+    <table>
+      <tr>
+        <th>Age</th>
+        <td>{{ character.age }}</td>
+      </tr>
+      <tr>
+        <th>Height</th>
+        <td>{{ character.height }}</td>
+      </tr>
+      <tr>
+        <th>Weight</th>
+        <td>{{ character.weight }}</td>
+      </tr>
+      <tr>
+        <th>Hobbies</th>
+        <td>{{ listToString(character.hobbies) }}</td>
+      </tr>
+      <tr>
+        <th>Birthday</th>
+        <td>{{ character.birthday }}</td>
+      </tr>
+    </table>
   </div>
 
   <div class="stats">
@@ -28,6 +42,8 @@
       </ul>
     </div>
   </div>
+
+  <p v-html="character.flavortext"></p>
 </div>
 </template>
 
@@ -119,14 +135,11 @@ export default {
   margin: 0;
   padding: 0;
 }
+
 .player {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-ul {
-  list-style: none;
 }
 
 .flavortext {
@@ -136,26 +149,69 @@ ul {
   text-align: left;
 }
 
+ul {
+  list-style: none;
+}
+
+th {
+  padding-right: 1em;
+  text-align: right;
+}
+
+.stats {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 .stat {
   margin: 1em;
+  border: 5px solid black;
 }
+
+.stat h3 {
+  padding: 0.5em;
+}
+
 .stat-buttons {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
 }
+
 .stats button {
+  background-color: gray;
+  border: none;
+  font-size: 1.25em;
   padding: 0.5em;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 }
+
+.stats button:hover {
+  background-color: gray;
+  border-color: black;
+  color: black;
+}
+
 .stats ul {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
+
 .stats li {
   padding: 1em;
 }
+
 .active {
-  background-color: gray;
+  background-color: darkred;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+p {
+  margin: 5%;
+  font-family: 'Texturina', 'Cinzel', serif;
+  text-align: left;
 }
 </style>

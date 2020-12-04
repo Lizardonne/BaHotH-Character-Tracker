@@ -90,7 +90,7 @@ async function refreshCharacters() {
     console.log(error);
   }
 }
-//refreshCharacters();  //breaks persistence by changing ID values
+refreshCharacters();  //breaks persistence on server restart by changing ID values
 
 // READ
 // Request body: NONE

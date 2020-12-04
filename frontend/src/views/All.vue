@@ -2,7 +2,7 @@
 <div class="all">
   <h1>Active Players</h1>
   <table>
-    <tr>
+    <tr class="table-header">
       <th>Player</th>
       <th>Character</th>
       <th>Created</th>
@@ -10,11 +10,11 @@
       <th>Delete</th>
     </tr>
     <tr v-for="player in players" v-bind:key="player._id">
-      <td v-on:click="gotoPlayer(player)">{{ player.playerName }}</td>
+      <td class="actionable" v-on:click="gotoPlayer(player)">{{ player.playerName }}</td>
       <td>{{ characterName(player) }}</td>
       <td>{{ dateToString(player.created) }}</td>
       <td>{{ dateToString(player.updated) }}</td>
-      <td><button type="button" v-on:click="deletePlayer(player)">X</button></td>
+      <td class="actionable" v-on:click="deletePlayer(player)">X</td>
     </tr>
   </table>
 </div>
@@ -55,11 +55,13 @@ export default {
       var character = this.characters.find(c => {
         return c._id == player.characterId;
       });
-      if(character == null) { return ""; }
+      if (character == null) {
+        return "";
+      }
       return character.name;
     },
     dateToString(date) {
-      if(typeof date == typeof "") {
+      if (typeof date == typeof "") {
         var temp = new Date(date);
         return temp.toLocaleDateString() + " @ " + temp.toLocaleTimeString()
       }
@@ -81,3 +83,31 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.all {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+tr:not(.table-header):hover {
+  background-color: gray;
+}
+
+td {
+  padding: 0 0.5em;
+}
+
+.actionable:hover {
+  background-color: darkred;
+}
+
+th {
+  font-size: 1.5em;
+}
+</style>
