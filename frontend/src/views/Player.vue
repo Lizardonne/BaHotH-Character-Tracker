@@ -17,13 +17,15 @@
   </div>
 
   <div class="stats">
-    <div v-for="(stat, i) in character.stats" v-bind:key="i">
+    <div v-bind:class="['stat', 'stat' + statName(i)]" v-for="(stat, i) in character.stats" v-bind:key="i">
       <h3>{{ statName(i) }}</h3>
-      <button type="button" v-on:click="decrementStat(i)">-</button>
+      <div class="stat-buttons">
+        <button type="button" v-on:click="decrementStat(i)">&ndash;</button>
+        <button type="button" v-on:click="incrementStat(i)">+</button>
+      </div>
       <ul>
         <li v-bind:class="{active: activeHP(i, j)}" class="stat-point" v-for="(point, j) in stat" v-bind:key="j">{{ point }}</li>
       </ul>
-      <button type="button" v-on:click="incrementStat(i)">+</button>
     </div>
   </div>
 </div>
@@ -91,19 +93,19 @@ export default {
       return statNames[index];
     },
     activeHP(statIndex, pointIndex) {
-      if(this.player.hp[statIndex] == pointIndex) {
+      if (this.player.hp[statIndex] == pointIndex) {
         return true;
       }
       return false;
     },
     incrementStat(index) {
-      if(this.player.hp[index] < this.character.stats[index].length) {
+      if (this.player.hp[index] < this.character.stats[index].length) {
         this.player.hp[index]++;
         this.updatePlayer();
       }
     },
     decrementStat(index) {
-      if(this.player.hp[index] > 0) {
+      if (this.player.hp[index] > 0) {
         this.player.hp[index]--;
         this.updatePlayer();
       }
@@ -113,6 +115,46 @@ export default {
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+}
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ul {
+  list-style: none;
+}
+
+.flavortext {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: left;
+}
+
+.stat {
+  margin: 1em;
+}
+.stat-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.stats button {
+  padding: 0.5em;
+}
+.stats ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.stats li {
+  padding: 1em;
+}
 .active {
   background-color: gray;
 }
