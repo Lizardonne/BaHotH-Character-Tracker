@@ -21,7 +21,7 @@
       <h3>{{ statName(i) }}</h3>
       <button type="button" v-on:click="decrementStat(i)">-</button>
       <ul>
-        <li v-bind:class="{active: activeHP(j)}" class="stat-point" v-for="(point, j) in stat" v-bind:key="j">{{ point }}</li>
+        <li v-bind:class="{active: activeHP(i, j)}" class="stat-point" v-for="(point, j) in stat" v-bind:key="j">{{ point }}</li>
       </ul>
       <button type="button" v-on:click="incrementStat(i)">+</button>
     </div>
@@ -58,9 +58,11 @@ export default {
     },
     async updatePlayer() {
       try {
-        await axios.put("/api/players/" + this.playerId, {
+        var r1 = await axios.put("/api/players/" + this.playerId, {
+          id: this.playerId,
           hp: this.player.hp
         });
+        console.log(r1);
         var response = await axios.get("/api/players/" + this.playerId);
         this.player = response.data;
       } catch (error) {
@@ -88,19 +90,23 @@ export default {
       ];
       return statNames[index];
     },
-    activeHP(index) {
-      if(index == this.player.hp[index]) {
+    activeHP(statIndex, pointIndex) {
+      if(this.player.hp[statIndex] == pointIndex) {
         return true;
       }
       return false;
     },
     incrementStat(index) {
-      this.player.hp[index]++;
-      this.updatePlayer();
+      if(this.player.hp[index] < this.character.stats[index].length) {
+        this.player.hp[index]++;
+        this.updatePlayer();
+      }
     },
     decrementStat(index) {
-      this.player.hp[index]--;
-      this.updatePlayer();
+      if(this.player.hp[index] > 0) {
+        this.player.hp[index]--;
+        this.updatePlayer();
+      }
     }
   }
 }

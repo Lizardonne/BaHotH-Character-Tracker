@@ -46,17 +46,17 @@ mongoose.connect("mongodb://localhost:27017/bahoth", {
 
 
 // CREATE
-  /* Request body:
-    playerName: String    Name of player document to be created
-    characterId: String   ID string of character document associated with player
-    startStats: [Number]  Starting indexes for all stats
-    */
+/* Request body:
+  playerName: String    Name of player document to be created
+  characterId: String   ID string of character document associated with player
+  startStats: [Number]  Starting indexes for all stats
+  */
 app.post("/api/players", async (req, res) => {
   const player = new Player({
     playerName: req.body.playerName,
     characterId: req.body.characterId,
-    created: Date.now(),
-    updated: Date.now(),
+    created: new Date(Date.now()),
+    updated: new Date(Date.now()),
     hp: req.body.startStats
   });
   try {
@@ -86,14 +86,14 @@ async function refreshCharacters() {
       });
       await c.save();
     });
-  } catch(error) {
+  } catch (error) {
     console.log(error);
   }
 }
 //refreshCharacters();  //breaks persistence by changing ID values
 
 // READ
-  // Request body: NONE
+// Request body: NONE
 app.get("/api/players", async (req, res) => {
   try {
     var players = await Player.find().exec();
@@ -103,7 +103,7 @@ app.get("/api/players", async (req, res) => {
     res.sendStatus(500);
   }
 });
-  // Request body: NONE
+// Request body: NONE
 app.get("/api/players/:player", async (req, res) => {
   try {
     var player = await Player.findById(req.params.player).exec();
@@ -113,7 +113,7 @@ app.get("/api/players/:player", async (req, res) => {
     res.sendStatus(500);
   }
 });
-  // Request body: NONE
+// Request body: NONE
 app.get("/api/characters", async (req, res) => {
   try {
     var characters = await Character.find().exec();
@@ -123,7 +123,7 @@ app.get("/api/characters", async (req, res) => {
     res.sendStatus(500);
   }
 });
-  // Request body: NONE
+// Request body: NONE
 app.get("/api/characters/:character", async (req, res) => {
   try {
     var character = await Character.findById(req.params.character).exec();
@@ -135,24 +135,26 @@ app.get("/api/characters/:character", async (req, res) => {
 });
 
 // UPDATE (gameplay)
-  /* Request body:
-    hp: [Number]    New HP indexes
-    */
+/* Request body:
+  id: String      String ID of player document to be modified
+  hp: [Number]    Modified HP indexes
+  */
 app.put("/api/players/:player", async (req, res) => {
   try {
-    var player = await Player.findById(req.params.id).exec();
-    player.updated = Date.now();
+    var player = await Player.findById(req.body.id).exec();
+    if(player == null) { throw new Error("player not found"); }
+    player.updated = new Date(Date.now());
     player.hp = req.body.hp;
     await player.save();
     res.send(player);
-  } catch(error) {
+  } catch (error) {
     console.log(error);
     res.sendStatus(500);
   }
 });
 
 // DELETE
-  // Request body: NONE
+// Request body: NONE
 app.delete("/api/players/:player", async (req, res) => {
   try {
     const response = await Player.findByIdAndDelete(req.params.player).exec();
