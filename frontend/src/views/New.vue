@@ -90,4 +90,10 @@ button:disabled {
   background-color: #26142a;
   color: #26142a;
 }
+
+@media only screen and (max-width: 620px){
+  .player-info {
+    width: 80%;
+  }
+}
 </style>

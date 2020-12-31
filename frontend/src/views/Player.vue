@@ -168,10 +168,15 @@ th {
 }
 
 .stat {
+  padding: 0.25em 0;
+  position: relative;
   border: 5px solid black;
 }
 
 .stat h3 {
+  position: absolute;
+  left: 0;
+  right: 0;
   padding: 0.5em;
 }
 
@@ -214,5 +219,66 @@ p {
   margin: 5% 15%;
   font-family: 'Texturina', 'Cinzel', serif;
   text-align: left;
+}
+
+@media only screen and (max-width:620px) {
+  .player-header {
+    order: 1;
+  }
+
+  .stats {
+    order: 2;
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* For vertically stacked stats */
+  /*
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-buttons {
+    width: 100%;
+  }
+  */
+
+  /* For horizontally stacked stats */
+  .stats {
+    order: 2;
+    margin-top: 20%;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .stat h3 {
+    top: -8%;
+    transform: rotate(-45deg);
+  }
+
+  .stat-buttons {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    height: 20%;
+  }
+
+  .stat ul {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .flavortext {
+    order: 3;
+    margin: 10% 5% 5% 5%;
+  }
+
+  p {
+    order: 4;
+    margin: 0 5% 10% 5%;
+  }
 }
 </style>

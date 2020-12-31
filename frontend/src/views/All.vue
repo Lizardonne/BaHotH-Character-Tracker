@@ -1,22 +1,40 @@
 <template>
 <div class="all">
   <h1>Active Players</h1>
-  <table>
-    <tr class="table-header">
-      <th class="hint">Player</th>
-      <th>Character</th>
-      <th>Created</th>
-      <th>Last Used</th>
-      <th class="hint">Delete</th>
-    </tr>
-    <tr v-for="player in players" v-bind:key="player._id">
-      <td class="actionable" v-on:click="gotoPlayer(player)">{{ player.playerName }}</td>
-      <td>{{ characterName(player) }}</td>
-      <td>{{ dateToString(player.created) }}</td>
-      <td>{{ dateToString(player.updated) }}</td>
-      <td class="actionable" v-on:click="deletePlayer(player)">X</td>
-    </tr>
-  </table>
+  <div class="table">
+    <!--
+    <div class="table-row table-header">
+      <span class="hint">Player</span>
+      <span>Character</span>
+      <span>Created</span>
+      <span>Last Used</span>
+      <span class="hint">Delete</span>
+    </div>
+    <div class="table-row" v-for="player in players" v-bind:key="player._id">
+      <span class="actionable" v-on:click="gotoPlayer(player)">{{ player.playerName }}</span>
+      <span>{{ characterName(player) }}</span>
+      <span>{{ dateToString(player.created) }}</span>
+      <span>{{ dateToString(player.updated) }}</span>
+      <span class="actionable" v-on:click="deletePlayer(player)">X</span>
+    </div>
+  -->
+    <table>
+      <tr class="table-header">
+        <th class="hint">Player</th>
+        <th>Character</th>
+        <th>Created</th>
+        <th>Last Used</th>
+        <th class="hint">Delete</th>
+      </tr>
+      <tr class="table-row" v-for="player in players" v-bind:key="player._id">
+        <td class="actionable" v-on:click="gotoPlayer(player)">{{ player.playerName }}</td>
+        <td>{{ characterName(player) }}</td>
+        <td>{{ dateToString(player.created) }}</td>
+        <td>{{ dateToString(player.updated) }}</td>
+        <td class="actionable" v-on:click="deletePlayer(player)">X</td>
+      </tr>
+    </table>
+  </div>
 </div>
 </template>
 
@@ -107,7 +125,8 @@ tr:not(.table-header):hover {
   background-color: gray;
 }
 
-th, td {
+th,
+td {
   padding: 0 0.5em;
 }
 
@@ -125,5 +144,26 @@ th, td {
 
 th {
   font-size: 1.5em;
+}
+
+
+@media only screen and (max-width: 620px) {
+  .actionable {
+    background-color: darkred;
+  }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  tr:not(.table-header) {
+    margin: 2em 0;
+  }
+
 }
 </style>
