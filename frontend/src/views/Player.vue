@@ -192,6 +192,8 @@ th {
   font-size: 1.25em;
   padding: 0.5em;
   clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  text-align: center;
+  vertical-align: middle;
 }
 
 .stats button:hover {
@@ -231,9 +233,10 @@ p {
     margin-top: 10%;
     display: flex;
     flex-direction: column;
+    font-size: 125%;
   }
 
-  /* For vertically stacked stats */
+  /* For horizontally arranged stats */
   /*
   .stat {
     display: flex;
@@ -245,8 +248,9 @@ p {
     width: 100%;
   }
   */
+  /* end */
 
-  /* For horizontally stacked stats */
+  /* For vertically stacked stats */
   .stats {
     order: 2;
     margin-top: 20%;
@@ -255,7 +259,8 @@ p {
   }
 
   .stat h3 {
-    top: -8%;
+    top: -12.5%;
+    left: -125%;
     transform: rotate(-45deg);
   }
 
@@ -263,13 +268,24 @@ p {
     display: flex;
     flex-direction: column-reverse;
     justify-content: space-between;
-    height: 20%;
+  }
+
+  .stats button {
+    padding: 0 0.5em;
+    margin: 0.125em 0;
   }
 
   .stat ul {
     display: flex;
     flex-direction: column-reverse;
+    margin-top: 0.5em;
+    margin-bottom: 0.125em;
   }
+
+  .stat li {
+    padding: 0;
+  }
+  /* end */
 
   .flavortext {
     order: 3;
