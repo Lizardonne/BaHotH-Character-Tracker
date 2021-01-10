@@ -38,7 +38,7 @@
         <button type="button" v-on:click="incrementStat(i)">+</button>
       </div>
       <ul>
-        <li v-bind:class="{active: activeHP(i, j)}" class="stat-point" v-for="(point, j) in stat" v-bind:key="j">{{ point }}</li>
+        <li v-bind:class="[{active: activeHP(i, j)}, {start: startHP(i, j)}]" class="stat-point" v-for="(point, j) in stat" v-bind:key="j">{{ point }}</li>
       </ul>
     </div>
   </div>
@@ -110,6 +110,12 @@ export default {
     },
     activeHP(statIndex, pointIndex) {
       if (this.player.hp[statIndex] == pointIndex) {
+        return true;
+      }
+      return false;
+    },
+    startHP(statIndex, pointIndex) {
+      if (pointIndex == this.character.statStarts[statIndex]) {
         return true;
       }
       return false;
@@ -217,6 +223,10 @@ th {
   clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 }
 
+.start {
+  color: white;
+}
+
 p {
   margin: 5% 15%;
   font-family: 'Texturina', 'Cinzel', serif;
@@ -285,6 +295,7 @@ p {
   .stat li {
     padding: 0;
   }
+
   /* end */
 
   .flavortext {
