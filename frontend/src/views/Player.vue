@@ -30,20 +30,24 @@
     </table>
   </div>
 
-  <div class="stats">
-    <div v-bind:class="['stat', 'stat' + statName(i)]" v-for="(stat, i) in character.stats" v-bind:key="i">
-      <h3>{{ statName(i) }}</h3>
-      <div class="stat-buttons">
-        <button type="button" v-on:click="decrementStat(i)">&ndash;</button>
-        <button type="button" v-on:click="incrementStat(i)">+</button>
+  <div class="stats-container">
+    <button class="toggle-layout" v-on:click="toggleLayout">Toggle Layout</button>
+    <div v-bind:class="['stats', 'stats-' + layouts[layoutIndex]]">
+      <div v-bind:class="['stat', 'stat-' + statName, {dead: isDead(statName)}]" v-for="(values, statName, i) in character.stats" v-bind:key="i">
+        <h3>{{ statName }}</h3>
+        <div class="stat-buttons">
+          <button type="button" v-on:click="decrementStat(statName)">&ndash;</button>
+          <button type="button" v-on:click="incrementStat(statName)">+</button>
+        </div>
+        <ul>
+          <li v-bind:class="[{active: activeHP(statName, j)}, {start: startHP(statName, j)}]" class="stat-point" v-for="(point, j) in values" v-bind:key="j">{{ point }}</li>
+        </ul>
       </div>
-      <ul>
-        <li v-bind:class="[{active: activeHP(i, j)}, {start: startHP(i, j)}]" class="stat-point" v-for="(point, j) in stat" v-bind:key="j">{{ point }}</li>
-      </ul>
     </div>
   </div>
 
   <p v-html="character.flavortext"></p>
+
 </div>
 </template>
 
@@ -57,7 +61,13 @@ export default {
   data() {
     return {
       player: Object,
-      character: Object
+      character: Object,
+      layouts: [
+        "normal",
+        "vertical",
+        "horizontal"
+      ],
+      layoutIndex: 0
     };
   },
   created() {
@@ -80,13 +90,16 @@ export default {
           id: this.playerId,
           hp: this.player.hp
         });
-        console.log(r1);
+        if (r1.status != 200) {
+          throw new Error();
+        }
         var response = await axios.get("/api/players/" + this.playerId);
         this.player = response.data;
       } catch (error) {
         console.log(error);
       }
     },
+    //-- Helper function
     listToString(array) {
       var output = "";
       if (array != null) {
@@ -99,38 +112,43 @@ export default {
       }
       return output;
     },
-    statName(index) {
-      var statNames = [
-        "Speed",
-        "Might",
-        "Sanity",
-        "Knowledge"
-      ];
-      return statNames[index];
-    },
-    activeHP(statIndex, pointIndex) {
-      if (this.player.hp[statIndex] == pointIndex) {
+    //-- Class determiners
+    activeHP(stat, index) {
+      if (this.player.hp[stat] == index) {
         return true;
       }
       return false;
     },
-    startHP(statIndex, pointIndex) {
-      if (pointIndex == this.character.statStarts[statIndex]) {
+    startHP(stat, index) {
+      if (this.character.start[stat] == index) {
         return true;
       }
       return false;
     },
-    incrementStat(index) {
-      if (this.player.hp[index] < this.character.stats[index].length) {
-        this.player.hp[index]++;
+    isDead(stat) {
+      if (this.player.hp[stat] < 0) {
+        return true;
+      }
+      return false;
+    },
+    //-- Button functions
+    incrementStat(stat) {
+      if (this.player.hp[stat] < this.character.stats[stat].length - 1) {
+        this.player.hp[stat]++;
         this.updatePlayer();
       }
     },
-    decrementStat(index) {
-      if (this.player.hp[index] > 0) {
-        this.player.hp[index]--;
-        this.updatePlayer();
+    decrementStat(stat) {
+      if (this.player.hp[stat] > -1) {
+        this.player.hp[stat]--;
+
+        if (this.player.hp[stat] > 0) {
+          this.updatePlayer();
+        }
       }
+    },
+    toggleLayout() {
+      this.layoutIndex = (++this.layoutIndex) % this.layouts.length;
     }
   }
 }
@@ -165,58 +183,138 @@ th {
   text-align: right;
 }
 
-.stats {
-  margin-top: 1em;
-  display: grid;
-  grid-template-rows: repeat(2, 1fr);
-  grid-auto-flow: column;
-  grid-gap: 1em;
-}
-
-.stat {
-  padding: 0.25em 0;
-  position: relative;
-  border: 5px solid black;
-}
-
-.stat h3 {
-  position: absolute;
-  left: 0;
-  right: 0;
-  padding: 0.5em;
-}
-
-.stat-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-}
-
-.stats button {
+button {
   background-color: gray;
   border: none;
-  font-size: 1.25em;
-  padding: 0.5em;
-  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
   text-align: center;
   vertical-align: middle;
+  padding: 0.25em;
 }
 
-.stats button:hover {
-  background-color: gray;
+button:hover {
+  background-color: darkgray;
   border-color: black;
   color: black;
 }
 
-.stats ul {
+.toggle-layout {
+  margin-top: 0.5em;
+}
+
+/* Universal Layout */
+.stats-container {
+  width: 100%;
+  margin: 0.5em 0;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.stats {
+  width: 90%;
+  margin-top: 0.5em;
+  display: grid;
+  justify-content: center;
+  grid-gap: 0.5em;
+}
+
+.stat {
+  border: 5px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.stat ul {
+  display: flex;
+  width: 100%;
+  margin: 0 0.5em;
+}
+
+.stat li {
+  padding: 0.5em;
+}
+
+.stat-buttons {
+  width: 85%;
+  display: flex;
   justify-content: space-between;
 }
 
-.stats li {
-  padding: 1em;
+.stat button {
+  font-size: 1.25em;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 }
+
+/* END Universal Layout */
+
+/* Normal Layout */
+.stats-normal {
+  grid-template-columns: 50% 50%;
+}
+
+.stats-normal ul {
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.stats-normal .stat-buttons {
+  transform: translate(0, -50%);
+}
+
+.stats-normal .stat h3 {
+  transform: translate(0, 50%);
+}
+
+/* END Normal Layout */
+
+/* Vertical Layout (stacked) */
+.stats-vertical {
+  grid-template-columns: auto;
+}
+
+.stats-vertical .stat-buttons {
+  padding-top: 0.5em;
+}
+
+.stats-vertical ul {
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.stats-vertical h3 {
+  position: absolute;
+  transform: translate(0, -75%);
+}
+
+/* END Vertical Layout */
+
+/* Horizontal Layout (side-by-side) */
+.stats-horizontal {
+  grid-template-columns: 20% 20% 20% 20%;
+}
+
+.stats-horizontal h3 {
+  width: 100%;
+  margin: 0.25em;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.stats-horizontal .stat-buttons {
+  width: 100%;
+  justify-content: space-around;
+}
+
+.stats-horizontal ul {
+  flex-direction: column;
+  width: 50%;
+  margin-bottom: 0.25em;
+}
+
+/* END Horizontal Layout */
 
 .active {
   background-color: darkred;
@@ -225,6 +323,10 @@ th {
 
 .start {
   color: white;
+}
+
+.dead {
+  background-color: black;
 }
 
 p {
@@ -238,69 +340,24 @@ p {
     order: 1;
   }
 
-  .stats {
+  .stats-container {
     order: 2;
-    margin-top: 10%;
-    display: flex;
-    flex-direction: column;
+    margin: 2.5%;
     font-size: 125%;
   }
 
-  /* For horizontally arranged stats */
-  /*
-  .stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .stat-buttons {
+  .stats-horizontal ul {
     width: 100%;
   }
-  */
-  /* end */
 
-  /* For vertically stacked stats */
-  .stats {
-    order: 2;
-    margin-top: 20%;
-    display: flex;
-    flex-direction: row;
+  .stats-normal ul {
+    flex-wrap: wrap;
+    justify-content: center;
   }
-
-  .stat h3 {
-    top: -12.5%;
-    left: -125%;
-    transform: rotate(-45deg);
-  }
-
-  .stat-buttons {
-    display: flex;
-    flex-direction: column-reverse;
-    justify-content: space-between;
-  }
-
-  .stats button {
-    padding: 0 0.5em;
-    margin: 0.125em 0;
-  }
-
-  .stat ul {
-    display: flex;
-    flex-direction: column-reverse;
-    margin-top: 0.5em;
-    margin-bottom: 0.125em;
-  }
-
-  .stat li {
-    padding: 0;
-  }
-
-  /* end */
 
   .flavortext {
     order: 3;
-    margin: 10% 5% 5% 5%;
+    margin: 5%;
   }
 
   p {

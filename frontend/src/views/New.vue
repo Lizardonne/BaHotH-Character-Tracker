@@ -47,7 +47,7 @@ export default {
         var response = await axios.post("/api/players", {
           playerName: this.playerName,
           characterId: character._id,
-          startStats: character.statStarts
+          start: character.start
         });
         this.$router.push({
           path: "/player/" + response.data._id
